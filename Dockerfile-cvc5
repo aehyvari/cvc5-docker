@@ -1,0 +1,23 @@
+FROM cimg/base:current
+
+RUN sudo apt-get update \
+    && sudo apt-get install -y \
+     flex \
+     cmake \
+     g++ \
+     libgmp-dev \
+     pip \
+     default-jre \
+    && sudo rm -rf /var/lib/apt/lists/*
+
+RUN /usr/bin/python3.10 -m pip install toml
+
+RUN git clone --single-branch https://github.com/cvc5/cvc5.git \
+    && cd cvc5 \
+    && ./configure.sh --no-poly --auto-download --static --static-binary \
+    && cd build \
+    && make -j \
+    && sudo make install \
+    && cd ../.. \
+    && rm -rf cvc5
+
